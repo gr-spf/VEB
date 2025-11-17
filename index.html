@@ -29,6 +29,20 @@
             color: #28a745;
             font-weight: bold;
         }
+        .autres {
+            font-size: 0.8em;
+            font-style: italic;
+            color: #666;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .autres ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        .autres li {
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +54,20 @@
         // Fonction pour tirer aléatoirement dans un tableau
         function tirerAleatoire(tableau) {
             return tableau[Math.floor(Math.random() * tableau.length)];
+        }
+
+        // Fonction pour générer la liste des autres idées (sans le choix)
+        function genererAutresIdees(tableauOriginal, choix) {
+            const autres = tableauOriginal.filter(item => item !== choix);
+            if (autres.length === 0) return '';
+            return `
+                <div class="autres">
+                    <strong>Autres idées :</strong>
+                    <ul>
+                        ${autres.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
         }
 
         // Liste joueurs pour le bloc "Participant/Activité avec"
@@ -105,6 +133,11 @@
             const choixExo2 = tirerAleatoire(exercice2);
             const choixJeu = tirerAleatoire(jeu);
 
+            const autresEch = genererAutresIdees(echauffement, choixEch);
+            const autresExo1 = genererAutresIdees(exercice1, choixExo1);
+            const autresExo2 = genererAutresIdees(exercice2, choixExo2);
+            const autresJeu = genererAutresIdees(jeu, choixJeu);
+
             document.getElementById('contenu').innerHTML = `
                 <div class="section">
                     <h2>Et le Coach du jour sera :</h2>
@@ -113,21 +146,25 @@
                 <div class="section">
                     <h2>Échauffement - 15 min</h2>
                     <p class="choix">${choixEch}</p>
+                    ${autresEch}
                 </div>
                 <div class="section">
                     <h2>Exercice 1 - 15 min</h2>
                     <p class="choix">${choixExo1}</p>
+                    ${autresExo1}
                 </div>
                 <div class="section">
                     <h2>Exercice 2 - 15 min</h2>
                     <p class="choix">${choixExo2}</p>
+                    ${autresExo2}
                 </div>
                 <div class="section">
                     <h2>Jeu - 15 min</h2>
                     <p class="choix">${choixJeu}</p>
+                    ${autresJeu}
                 </div>
             `;
-            
+           
             // Met la date en live (car template literal dans HTML statique bugue)
             document.getElementById('date').innerHTML = `<small>Généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}</small>`;
         }
